@@ -32,12 +32,9 @@ assistent_rag/
 
 ## 🖼️ Demonstrações
 
-Adicione aqui imagens da aplicação em funcionamento.  
-Coloque seus arquivos de imagem na pasta `assets/` e utilize a sintaxe abaixo:
-
 ```markdown
-![Tela Inicial](assets/tela-inicial.png)
-![Exemplo de Busca](assets/exemplo-busca.png)
+![Tela Inicial](assets/app-rag.png)
+![Exemplo de Busca](assets/rag-manual.png)
 ```
 
 ---
