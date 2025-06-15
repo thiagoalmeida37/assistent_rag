@@ -32,10 +32,9 @@ assistent_rag/
 
 ## 🖼️ Demonstrações
 
-```markdown
 ![Tela Inicial](assets/app-rag.png)
 ![Exemplo de Busca](assets/rag-manual.png)
-```
+
 
 ---
 
