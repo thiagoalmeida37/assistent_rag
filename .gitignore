@@ -122,6 +122,7 @@ ehthumbs.db
 Desktop.ini
 
 # Virtual environments
+.env
 venv/
 ENV/
 env/
