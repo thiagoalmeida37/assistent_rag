@@ -103,4 +103,18 @@ with st.sidebar:
         index=0,
     )
     
+if 'messages' not in st.session_state:
+    st.session_state['messages'] = []
+
 question = st.chat_input('Faça uma pergunta ao Assistente Virtual')
+
+if vector_store and question:
+    for message in st.session_state['messages']:
+        st.chat_message(message.get('role')).write(message.get('content'))
+
+    st.chat_message('user').write(question)
+    st.session_state['messages'].append({'role': 'user', 'content': question})
+
+
+
+                                    
