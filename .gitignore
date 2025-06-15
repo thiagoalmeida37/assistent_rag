@@ -129,3 +129,10 @@ env/
 .venv/
 env.bak/
 venv.bak/
+
+# Local configuration files
+db/
+db.sqlite3
+db*
+db
+*.sqlite3

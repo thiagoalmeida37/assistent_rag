@@ -5,28 +5,16 @@ import streamlit as st
 
 from decouple import config
 
-from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import Chroma
+from langchain.document_loaders import PyPDFLoader
+from langchain.embeddings import OpenAIEmbeddings
 
 os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
 
 persist_directory = 'db'
 
 def process_pdf(file):
-    """
-    Processa o arquivo PDF recebido como parâmetro.
-
-    Esta função normalmente realiza operações como:
-    - Abrir o arquivo PDF.
-    - Ler e extrair o texto das páginas.
-    - Retornar o texto extraído ou processado para uso posterior.
-
-    Parâmetros:
-        file: Caminho ou objeto do arquivo PDF a ser processado.
-
-    Retorna:
-        O texto extraído do PDF ou outro resultado do processamento.
-    """
     with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
         temp_file.write(file.read())
         temp_file_path = temp_file.name
@@ -42,6 +30,29 @@ def process_pdf(file):
 
     chunks = text_splitter.split_documents(documents)
     return chunks
+
+def load_existing_vector_store():
+    if os.path.exists(os.path.join(persist_directory)):
+        vector_store = Chroma(
+            persist_directory=persist_directory,
+            embedding_function = OpenAIEmbeddings(),
+        )
+    
+        return vector_store
+    return None
+
+def add_to_vector_store(chunks, vector_store=None):
+    if vector_store:
+        vector_store.add_documents(chunks)
+    else:
+        vector_store = Chroma.from_documents(
+            documents=chunks,
+            embedding=OpenAIEmbeddings(),
+            persist_directory=persist_directory,
+        )
+    return vector_store
+
+vector_store = load_existing_vector_store()
 
 
 st.set_page_config(
@@ -68,7 +79,14 @@ with st.sidebar:
                 chunks = process_pdf(file=uploaded_file)
                 all_chunks.extend(chunks)
                 print(all_chunks)
+            
+            vector_store = add_to_vector_store(
+                chunks=all_chunks,
+                vector_store = vector_store,
+            )
+
             st.success('Arquivos processados com sucesso!')
+
 
     st.header('Configurações do Modelo LLM 🛠️')
     model_options = {
